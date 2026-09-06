@@ -12,9 +12,9 @@ const SCREEN_HEIGHT = 720;
 const FPS = 60;
 const FRAME_DURATION = 1000 / FPS;
 
-const GRAVITY = 0.30;
-const FLAP_STRENGTH = -6.8;
-const MAX_FALL_SPEED = 7.5; // Terminal velocity: prevents bird from plunging too fast
+const GRAVITY = 0.38;
+const FLAP_STRENGTH = -7.4;
+const MAX_FALL_SPEED = 8.0; // Terminal velocity: prevents bird from plunging too fast
 const PIPE_SPEED = 2.5;     // Smooth, readable scrolling speed
 const PIPE_GAP = 190;       // Forgiving, fun gap between pipes
 const PIPE_WIDTH = 78;

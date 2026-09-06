@@ -23,9 +23,9 @@ SCREEN_WIDTH = 480
 SCREEN_HEIGHT = 720
 FPS = 60
 
-GRAVITY = 0.30
-FLAP_STRENGTH = -6.8
-MAX_FALL_SPEED = 7.5
+GRAVITY = 0.38
+FLAP_STRENGTH = -7.4
+MAX_FALL_SPEED = 8.0
 PIPE_SPEED = 2.5
 PIPE_GAP = 190          # vertical opening between top and bottom pipe
 PIPE_WIDTH = 78
