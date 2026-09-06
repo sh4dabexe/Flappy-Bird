@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Flappy Bird — Play Online</title>
+  <meta name="description" content="A classic Flappy Bird game with 100% procedural graphics and authentic arcade physics. Playable directly in your browser.">
+  <meta name="theme-color" content="#54c0eb">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Flappy Bird — Procedural Arcade Web Game">
+  <meta property="og:description" content="Play Flappy Bird online! 100% procedural graphics, authentic physics, and retro sound effects.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game-wrapper">
+    <!-- Top Bar / Quick Controls -->
+    <header class="game-header">
+      <div class="header-left">
+        <span class="game-badge">ARCADE ENGINE</span>
+        <h1 class="title">FLAPPY BIRD</h1>
+      </div>
+      <div class="header-actions">
+        <button id="soundToggleBtn" class="icon-btn" title="Toggle Sound" aria-label="Toggle Sound">
+          <svg id="soundOnIcon" class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <svg id="soundOffIcon" class="icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+        <button id="fullscreenBtn" class="icon-btn" title="Fullscreen" aria-label="Fullscreen">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Canvas Frame with Arcade Glow -->
+    <main class="canvas-container" id="canvasContainer">
+      <canvas id="gameCanvas" width="480" height="720"></canvas>
+      
+      <!-- Mobile tap hint indicator (shown on first touch / mobile) -->
+      <div id="tapOverlay" class="tap-overlay hidden">
+        <div class="tap-hand">👆</div>
+        <span>TAP TO FLAP</span>
+      </div>
+    </main>
+
+    <!-- Footer Controls Guide -->
+    <footer class="game-footer">
+      <div class="controls-guide">
+        <span class="ctrl-chip"><kbd>SPACE</kbd> / <kbd>↑</kbd> Flap</span>
+        <span class="ctrl-chip"><kbd>MOUSE CLICK</kbd> / <kbd>TAP</kbd> Flap</span>
+        <span class="ctrl-chip"><kbd>ESC</kbd> Pause</span>
+      </div>
+      <div class="footer-meta">
+        <span>100% Procedural Graphics • Web Audio Synthesizer</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
