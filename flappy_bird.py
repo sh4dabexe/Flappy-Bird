@@ -23,13 +23,14 @@ SCREEN_WIDTH = 480
 SCREEN_HEIGHT = 720
 FPS = 60
 
-GRAVITY = 0.45
-FLAP_STRENGTH = -8.5
-PIPE_SPEED = 3.2
-PIPE_GAP = 170          # vertical opening between top and bottom pipe
+GRAVITY = 0.30
+FLAP_STRENGTH = -6.8
+MAX_FALL_SPEED = 7.5
+PIPE_SPEED = 2.5
+PIPE_GAP = 190          # vertical opening between top and bottom pipe
 PIPE_WIDTH = 78
 PIPE_SPACING = 280      # horizontal distance between pipes
-PIPE_INTERVAL = 100     # frames between spawns (kept in sync with spacing)
+PIPE_INTERVAL = 115     # frames between spawns (kept in sync with spacing)
 
 GROUND_HEIGHT = 110
 BIRD_X = 130
@@ -244,12 +245,12 @@ class Bird:
         self.vy = FLAP_STRENGTH
 
     def update(self):
-        self.vy += GRAVITY
+        self.vy = min(self.vy + GRAVITY, MAX_FALL_SPEED)
         self.y += self.vy
         # Tilt based on vertical velocity
-        target = BIRD_DIVE_ANGLE if self.vy > 0 else BIRD_FLAP_ANGLE
-        self.angle += (target - self.angle) * 0.2
-        self.wing_phase = (self.wing_phase + 0.3) % (math.pi * 2)
+        target = BIRD_DIVE_ANGLE if self.vy > 3 else (BIRD_FLAP_ANGLE if self.vy < 0 else 0)
+        self.angle += (target - self.angle) * 0.16
+        self.wing_phase = (self.wing_phase + 0.28) % (math.pi * 2)
 
     def draw(self):
         sprite = BIRD_SPRITE
@@ -261,9 +262,10 @@ class Bird:
 
     @property
     def rect(self):
+        inset = 5
         return pygame.Rect(
-            self.x - BIRD_RADIUS, self.y - BIRD_RADIUS,
-            BIRD_RADIUS * 2, BIRD_RADIUS * 2,
+            self.x - BIRD_RADIUS + inset, self.y - BIRD_RADIUS + inset,
+            (BIRD_RADIUS - inset) * 2, (BIRD_RADIUS - inset) * 2,
         )
 
 

@@ -12,13 +12,14 @@ const SCREEN_HEIGHT = 720;
 const FPS = 60;
 const FRAME_DURATION = 1000 / FPS;
 
-const GRAVITY = 0.45;
-const FLAP_STRENGTH = -8.5;
-const PIPE_SPEED = 3.2;
-const PIPE_GAP = 170;
+const GRAVITY = 0.30;
+const FLAP_STRENGTH = -6.8;
+const MAX_FALL_SPEED = 7.5; // Terminal velocity: prevents bird from plunging too fast
+const PIPE_SPEED = 2.5;     // Smooth, readable scrolling speed
+const PIPE_GAP = 190;       // Forgiving, fun gap between pipes
 const PIPE_WIDTH = 78;
 const PIPE_SPACING = 280;
-const PIPE_INTERVAL = 100; // frames between spawns
+const PIPE_INTERVAL = 115;  // Comfortable spacing between pipe spawns
 
 const GROUND_HEIGHT = 110;
 const BIRD_X = 130;
@@ -305,12 +306,22 @@ class Bird {
 
   update() {
     this.vy += GRAVITY;
+    if (this.vy > MAX_FALL_SPEED) {
+      this.vy = MAX_FALL_SPEED;
+    }
     this.y += this.vy;
 
-    // Tilt angle interpolation
-    const targetAngle = this.vy > 0 ? BIRD_DIVE_ANGLE : BIRD_FLAP_ANGLE;
-    this.angle += (targetAngle - this.angle) * 0.2;
-    this.wingPhase = (this.wingPhase + 0.35) % (Math.PI * 2);
+    // Smooth tilt: nose up when flapping, level when floating, dive when falling fast
+    let targetAngle = 0;
+    if (this.vy < -0.5) {
+      targetAngle = BIRD_FLAP_ANGLE;
+    } else if (this.vy > 3.0) {
+      targetAngle = BIRD_DIVE_ANGLE;
+    } else {
+      targetAngle = 0;
+    }
+    this.angle += (targetAngle - this.angle) * 0.16;
+    this.wingPhase = (this.wingPhase + 0.28) % (Math.PI * 2);
   }
 
   draw(ctx) {
@@ -389,11 +400,12 @@ class Bird {
   }
 
   getBounds() {
+    const inset = 6;
     return {
-      left: this.x - BIRD_RADIUS + 3,
-      right: this.x + BIRD_RADIUS - 3,
-      top: this.y - BIRD_RADIUS + 3,
-      bottom: this.y + BIRD_RADIUS - 3
+      left: this.x - BIRD_RADIUS + inset,
+      right: this.x + BIRD_RADIUS - inset,
+      top: this.y - BIRD_RADIUS + inset,
+      bottom: this.y + BIRD_RADIUS - inset
     };
   }
 }
@@ -467,6 +479,8 @@ class Game {
     this.flash = 0;
     this.deadCooldown = 0;
     this.isPaused = false;
+    this.lastTime = 0;
+    this.accumulator = 0;
 
     this.initDPI();
     this.setupEvents();
@@ -708,10 +722,24 @@ class Game {
     }
   }
 
-  loop() {
-    this.update();
+  loop(timestamp = 0) {
+    if (!this.lastTime) {
+      this.lastTime = timestamp;
+    }
+    let delta = timestamp - this.lastTime;
+    this.lastTime = timestamp;
+
+    // Prevent large time spikes when tab is hidden or lag occurs
+    if (delta > 100) delta = 100;
+
+    this.accumulator += delta;
+    while (this.accumulator >= FRAME_DURATION) {
+      this.update();
+      this.accumulator -= FRAME_DURATION;
+    }
+
     this.draw();
-    requestAnimationFrame(() => this.loop());
+    requestAnimationFrame((t) => this.loop(t));
   }
 }
 
@@ -721,7 +749,7 @@ class Game {
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('gameCanvas');
   const game = new Game(canvas);
-  game.loop();
+  requestAnimationFrame((t) => game.loop(t));
 
   // Sound Toggle Button
   const soundBtn = document.getElementById('soundToggleBtn');
